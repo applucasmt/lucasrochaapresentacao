@@ -142,10 +142,9 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .slide{flex:0 0 min(60vw,600px)}
 .shot{position:relative;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid var(--glass-border);background:var(--panel);transition:.5s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
 .slide:hover .shot{border-color:rgba(255,255,255,0.4);box-shadow:0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,255,255,.15);transform:translateY(-5px)}
-.shot img, .shot video{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85}
+.shot img, .shot video{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85; cursor:pointer;}
 .slide:hover .shot img, .slide:hover .shot video{transform:scale(1.05);opacity:1}
-.shot.missing img{display:none}
-.shot.missing video{display:none !important;} /* Esconde o video se der erro */
+.shot.missing img, .shot.missing video{display:none !important;}
 .shot.missing::before{content:attr(data-file);position:absolute;inset:14px;display:grid;place-items:center;text-align:center;border:1.5px dashed var(--line);border-radius:12px;color:var(--g);font-size:.95rem;padding:1rem;background:rgba(10,10,10,0.6);backdrop-filter:blur(10px)}
 .slide figcaption{margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
 .slide figcaption b{font-family:var(--display);font-weight:600;font-size:1rem;color:#fff}
@@ -344,11 +343,10 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <figcaption><b>Banners</b><span>Comunicação visual</span></figcaption>
         </figure>
         
-        <!-- CARTÃO DO VÍDEO CORRIGIDO -->
         <figure class="slide">
+          <!-- CARTÃO DO VÍDEO COM FALLBACK -->
           <div class="shot video" data-file="letreiros-led.jpg">
-            <!-- Aponta para o arquivo exato que está no seu repositório -->
-            <video src="letreiros-led.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video>
+            <video src="letreiros-led.mp4" loop muted playsinline preload="auto" onerror="this.parentElement.classList.add('missing')"></video>
           </div>
           <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
         </figure>
@@ -427,6 +425,26 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   const $ = (s,c=document)=>c.querySelector(s);
   const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
   const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+
+  /* --- FORÇAR A REPRODUÇÃO DO VÍDEO --- */
+  // Como navegadores modernos bloqueiam autoplay, tentamos rodar o vídeo via JS e
+  // adicionamos um evento de clique caso o navegador exija interação do usuário.
+  const videoEl = document.querySelector('video');
+  if (videoEl) {
+    // Tenta rodar assim que a página carregar
+    videoEl.play().catch(() => {
+      // Se falhar, o usuário pode clicar para dar play
+      videoEl.style.cursor = 'pointer';
+      videoEl.addEventListener('click', () => {
+        if (videoEl.paused) videoEl.play();
+        else videoEl.pause();
+      });
+    });
+    // Se o vídeo não existir (der erro de carregamento), aciona o CSS de erro
+    videoEl.addEventListener('error', () => {
+      videoEl.parentElement.classList.add('missing');
+    });
+  }
 
   /* foto de perfil */
   const portrait = $('#portrait');
