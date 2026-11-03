@@ -152,10 +152,12 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .wbar{width:min(1100px,88vw);margin:0 auto;height:2px;background:var(--glass-border);position:relative;border-radius:2px;overflow:hidden}
 .wbar i{position:absolute;inset:0;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
 
-/* botão de play do vídeo (aparece só se o vídeo estiver pausado) */
-.playbtn{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.55);color:#fff;font-size:1.4rem;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:3;display:none;place-items:center;transition:.3s}
-.playbtn:hover{background:#fff;color:#000}
-.shot.paused .playbtn{display:grid}
+/* vídeo do YouTube dentro do item da galeria */
+.ytplay{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.55);color:#fff;font-size:1.4rem;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:3;display:grid;place-items:center;transition:.3s}
+.ytplay:hover{background:#fff;color:#000}
+.shot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;background:#000}
+.shot.playing img,.shot.playing .ytplay{display:none}
+.shot.missing .ytplay{display:none}
 
 .tools{padding:8rem 0}
 .groups{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3.5rem}
@@ -336,6 +338,12 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
         <p class="lead rv">Role a página para ver o que já criei.</p>
       </div>
 
+      <!--
+        COMO USAR CADA ITEM DA GALERIA:
+        - Só imagem: coloque a imagem na raiz do repositório e aponte em <img src="nome.jpg">. Deixe data-youtube="".
+        - Vídeo do YouTube: cole o link em data-youtube="https://youtu.be/XXXXXXXXXXX".
+          A <img> vira a capa do vídeo. Se a imagem não existir, usa a capa do próprio YouTube.
+      -->
       <div class="track" id="track">
         <figure class="slide">
           <div class="shot" data-file="logomarcas.jpg">
@@ -349,12 +357,8 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
         </figure>
 
         <figure class="slide">
-          <!-- VÍDEO: arquivo letreiros-led.mp4 na raiz do repositório -->
-          <div class="shot" id="ledShot" data-file="letreiros-led.mp4 não encontrado">
-            <video id="ledVideo" muted loop playsinline autoplay preload="auto" disablepictureinpicture>
-              <source src="./letreiros-led.mp4" type="video/mp4">
-            </video>
-            <button class="playbtn" id="ledPlay" type="button" aria-label="Reproduzir vídeo">&#9654;</button>
+          <div class="shot" data-file="letreiros-led.jpg" data-youtube="https://youtu.be/qd3IlfxZd-0">
+            <img src="letreiros-led.jpg" alt="Letreiros em LED" onerror="this.parentElement.classList.add('missing')">
           </div>
           <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
         </figure>
@@ -434,39 +438,55 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
   const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
 
-  /* --- VÍDEO LETREIROS LED --- */
-  const ledVideo = document.getElementById('ledVideo');
-  const ledShot  = document.getElementById('ledShot');
-  const ledPlay  = document.getElementById('ledPlay');
-  if (ledVideo) {
-    ledVideo.muted = true;                       // muted via JS (exigido pelo autoplay)
-    ledVideo.setAttribute('playsinline','');
-
-    const tryPlay = () => {
-      const p = ledVideo.play();
-      if (p && p.catch) p.catch(() => ledShot.classList.add('paused'));
-    };
-
-    ledVideo.addEventListener('playing', () => ledShot.classList.remove('paused'));
-    ledVideo.addEventListener('pause',   () => ledShot.classList.add('paused'));
-
-    // se o arquivo não carregar (404 / formato não suportado)
-    ledVideo.querySelector('source').addEventListener('error', () => {
-      ledShot.classList.add('missing');
-    });
-
-    // toca quando aparece na tela e pausa quando sai
-    new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) tryPlay(); else ledVideo.pause();
-    }), {threshold: .25}).observe(ledShot);
-
-    // clique no vídeo ou no botão alterna play/pause
-    const toggle = () => ledVideo.paused ? tryPlay() : ledVideo.pause();
-    ledVideo.addEventListener('click', toggle);
-    ledPlay.addEventListener('click', toggle);
-
-    tryPlay();
+  /* --- ITENS COM VÍDEO DO YOUTUBE (data-youtube="link") --- */
+  function ytId(url){
+    url = (url || '').trim();
+    if(!url) return null;
+    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/);
+    if(m) return m[1];
+    return /^[\w-]{11}$/.test(url) ? url : null;
   }
+  $$('.shot[data-youtube]').forEach(shot=>{
+    const id = ytId(shot.dataset.youtube);
+    if(!id) return;                                  // sem link válido: continua só como imagem
+    const thumb = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+
+    let img = shot.querySelector('img');
+    if(!img){ img = document.createElement('img'); img.alt = 'Vídeo'; img.src = thumb; shot.prepend(img); }
+    const fallback = ()=>{                           // se a capa própria não existir, usa a do YouTube
+      if(img.dataset.fb) return;
+      img.dataset.fb = '1';
+      shot.classList.remove('missing');
+      img.src = thumb;
+    };
+    img.addEventListener('error', fallback);
+    if(img.complete && img.naturalWidth === 0 && img.getAttribute('src')) fallback();
+
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ytplay';
+    btn.setAttribute('aria-label','Reproduzir vídeo'); btn.innerHTML = '&#9654;';
+    shot.appendChild(btn);
+
+    let frame = null;
+    const play = ()=>{
+      if(frame) return;
+      frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
+      frame.title = 'Vídeo do YouTube';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      shot.appendChild(frame);
+      shot.classList.add('playing');
+    };
+    const stop = ()=>{                               // ao sair da tela, volta para a capa e para o som
+      if(!frame) return;
+      frame.remove(); frame = null;
+      shot.classList.remove('playing');
+    };
+    btn.addEventListener('click', play);
+    img.addEventListener('click', play);
+    new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) stop(); }),{threshold:.1}).observe(shot);
+  });
 
   /* foto de perfil */
   const portrait = $('#portrait');
