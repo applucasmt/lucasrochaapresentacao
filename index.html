@@ -134,8 +134,7 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .job li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:var(--g);box-shadow:var(--glow)}
 
 /* --- TRABALHOS --- */
-.work{height:auto; /* Removido o height fixo de 500vh */
-}
+.work{height:auto;}
 .work .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:2rem}
 .work .head{width:min(1100px,88vw);margin:0 auto}
 .work .head h2{margin-bottom:.4rem}
@@ -334,7 +333,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 
       <div class="track" id="track">
         <figure class="slide">
-          <!-- EXEMPLO DE VÍDEO: Basta substituir a tag <img> por <video> com a classe .video -->
           <div class="shot video" data-file="logomarcas.jpg">
             <img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')">
             <!-- <video src="seu-video.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video> -->
@@ -483,9 +481,9 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   
   function sizeWork(){
     if(reduce) return;
-    // Calcula a distância real de rolagem (largura total do track - largura da tela)
-    const dist = Math.max(0, track.scrollWidth - innerWidth);
-    // Define a altura da seção como a distância + 100vh para garantir a área de pin
+    // Adiciona uma margem extra (window.innerWidth / 2) para garantir que o último cartão
+    // saia da borda e chegue ao centro da tela, não cortando as legendas.
+    const dist = Math.max(0, track.scrollWidth - innerWidth + (innerWidth * 0.2));
     work.style.height = (dist + innerHeight) + 'px';
     work._dist = dist;
   }
@@ -513,7 +511,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 
     if(!reduce){
       const wr = work.getBoundingClientRect();
-      // Calcula o progresso da rolagem dentro da seção fixa
       const p = clamp(-wr.top / (wr.height - vh));
       track.style.transform = `translate3d(${-p * (work._dist || 0)}px,0,0)`;
       wbar.style.transform = `scaleX(${p})`;
