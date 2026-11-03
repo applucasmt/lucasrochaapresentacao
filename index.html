@@ -152,12 +152,9 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .wbar{width:min(1100px,88vw);margin:0 auto;height:2px;background:var(--glass-border);position:relative;border-radius:2px;overflow:hidden}
 .wbar i{position:absolute;inset:0;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
 
-/* vídeo do YouTube dentro do item da galeria */
-.ytplay{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.55);color:#fff;font-size:1.4rem;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:3;display:grid;place-items:center;transition:.3s}
-.ytplay:hover{background:#fff;color:#000}
-.shot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;background:#000}
-.shot.playing img,.shot.playing .ytplay{display:none}
-.shot.missing .ytplay{display:none}
+/* vídeo do YouTube dentro do item da galeria (sem controles, cortado por fora para esconder título/logo) */
+.shot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;pointer-events:none;opacity:0;transform:scale(1.4);transition:opacity .6s}
+.shot iframe.on{opacity:1}
 
 .tools{padding:8rem 0}
 .groups{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3.5rem}
@@ -462,30 +459,25 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     img.addEventListener('error', fallback);
     if(img.complete && img.naturalWidth === 0 && img.getAttribute('src')) fallback();
 
-    const btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'ytplay';
-    btn.setAttribute('aria-label','Reproduzir vídeo'); btn.innerHTML = '&#9654;';
-    shot.appendChild(btn);
-
     let frame = null;
-    const play = ()=>{
+    const play = ()=>{                               // toca sozinho, mudo e em loop, sem controles
       if(frame) return;
       frame = document.createElement('iframe');
-      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
-      frame.title = 'Vídeo do YouTube';
-      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-      frame.allowFullscreen = true;
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0`;
+      frame.title = 'Vídeo';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+      frame.tabIndex = -1;
+      frame.setAttribute('aria-hidden','true');
+      frame.addEventListener('load', ()=>setTimeout(()=>{ if(frame) frame.classList.add('on'); }, 700));
       shot.appendChild(frame);
-      shot.classList.add('playing');
     };
-    const stop = ()=>{                               // ao sair da tela, volta para a capa e para o som
+    const stop = ()=>{                               // ao sair da tela, volta para a capa
       if(!frame) return;
       frame.remove(); frame = null;
-      shot.classList.remove('playing');
     };
-    btn.addEventListener('click', play);
-    img.addEventListener('click', play);
-    new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) stop(); }),{threshold:.1}).observe(shot);
+    new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.intersectionRatio >= .5) play(); else stop();
+    }),{threshold:[0,.5]}).observe(shot);
   });
 
   /* foto de perfil */
