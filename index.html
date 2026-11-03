@@ -152,6 +152,11 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .wbar{width:min(1100px,88vw);margin:0 auto;height:2px;background:var(--glass-border);position:relative;border-radius:2px;overflow:hidden}
 .wbar i{position:absolute;inset:0;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
 
+/* botão de play do vídeo (aparece só se o vídeo estiver pausado) */
+.playbtn{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.55);color:#fff;font-size:1.4rem;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:3;display:none;place-items:center;transition:.3s}
+.playbtn:hover{background:#fff;color:#000}
+.shot.paused .playbtn{display:grid}
+
 .tools{padding:8rem 0}
 .groups{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3.5rem}
 .groups h3{font-family:var(--display);font-weight:600;font-size:1rem;margin-bottom:1.2rem;color:#fff;display:flex;align-items:center;gap:8px}
@@ -333,7 +338,7 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 
       <div class="track" id="track">
         <figure class="slide">
-          <div class="shot video" data-file="logomarcas.jpg">
+          <div class="shot" data-file="logomarcas.jpg">
             <img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')">
           </div>
           <figcaption><b>Logomarcas</b><span>Identidade visual</span></figcaption>
@@ -342,15 +347,18 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <div class="shot" data-file="banners.jpg"><img src="banners.jpg" alt="Banners" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
           <figcaption><b>Banners</b><span>Comunicação visual</span></figcaption>
         </figure>
-        
+
         <figure class="slide">
-          <!-- CARTÃO DO VÍDEO COM FALLBACK -->
-          <div class="shot video" data-file="letreiros-led.jpg">
-            <video src="letreiros-led.mp4" loop muted playsinline preload="auto" onerror="this.parentElement.classList.add('missing')"></video>
+          <!-- VÍDEO: arquivo letreiros-led.mp4 na raiz do repositório -->
+          <div class="shot" id="ledShot" data-file="letreiros-led.mp4 não encontrado">
+            <video id="ledVideo" muted loop playsinline autoplay preload="auto" disablepictureinpicture>
+              <source src="./letreiros-led.mp4" type="video/mp4">
+            </video>
+            <button class="playbtn" id="ledPlay" type="button" aria-label="Reproduzir vídeo">&#9654;</button>
           </div>
           <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
         </figure>
-        
+
         <figure class="slide">
           <div class="shot" data-file="redes-sociais.jpg"><img src="redes-sociais.jpg" alt="Redes sociais" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
           <figcaption><b>Redes sociais</b><span>Planejamento e criação</span></figcaption>
@@ -426,24 +434,38 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
   const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
 
-  /* --- FORÇAR A REPRODUÇÃO DO VÍDEO --- */
-  // Como navegadores modernos bloqueiam autoplay, tentamos rodar o vídeo via JS e
-  // adicionamos um evento de clique caso o navegador exija interação do usuário.
-  const videoEl = document.querySelector('video');
-  if (videoEl) {
-    // Tenta rodar assim que a página carregar
-    videoEl.play().catch(() => {
-      // Se falhar, o usuário pode clicar para dar play
-      videoEl.style.cursor = 'pointer';
-      videoEl.addEventListener('click', () => {
-        if (videoEl.paused) videoEl.play();
-        else videoEl.pause();
-      });
+  /* --- VÍDEO LETREIROS LED --- */
+  const ledVideo = document.getElementById('ledVideo');
+  const ledShot  = document.getElementById('ledShot');
+  const ledPlay  = document.getElementById('ledPlay');
+  if (ledVideo) {
+    ledVideo.muted = true;                       // muted via JS (exigido pelo autoplay)
+    ledVideo.setAttribute('playsinline','');
+
+    const tryPlay = () => {
+      const p = ledVideo.play();
+      if (p && p.catch) p.catch(() => ledShot.classList.add('paused'));
+    };
+
+    ledVideo.addEventListener('playing', () => ledShot.classList.remove('paused'));
+    ledVideo.addEventListener('pause',   () => ledShot.classList.add('paused'));
+
+    // se o arquivo não carregar (404 / formato não suportado)
+    ledVideo.querySelector('source').addEventListener('error', () => {
+      ledShot.classList.add('missing');
     });
-    // Se o vídeo não existir (der erro de carregamento), aciona o CSS de erro
-    videoEl.addEventListener('error', () => {
-      videoEl.parentElement.classList.add('missing');
-    });
+
+    // toca quando aparece na tela e pausa quando sai
+    new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) tryPlay(); else ledVideo.pause();
+    }), {threshold: .25}).observe(ledShot);
+
+    // clique no vídeo ou no botão alterna play/pause
+    const toggle = () => ledVideo.paused ? tryPlay() : ledVideo.pause();
+    ledVideo.addEventListener('click', toggle);
+    ledPlay.addEventListener('click', toggle);
+
+    tryPlay();
   }
 
   /* foto de perfil */
@@ -500,18 +522,18 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   jobs.forEach(j=>jio.observe(j));
   const tl = $('#tl'), tlFill = $('#tlFill');
 
-  /* galeria corrigida */
+  /* galeria */
   const work = $('#trabalhos'), track = $('#track'), wbar = $('#wbar');
-  
+
   function sizeWork(){
     if(reduce) return;
     const dist = Math.max(0, track.scrollWidth - innerWidth + (innerWidth * 0.2));
     work.style.height = (dist + innerHeight) + 'px';
     work._dist = dist;
   }
-  
-  sizeWork(); 
-  addEventListener('resize',sizeWork); 
+
+  sizeWork();
+  addEventListener('resize',sizeWork);
   addEventListener('load',sizeWork);
 
   /* navegação */
