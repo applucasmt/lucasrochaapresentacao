@@ -335,7 +335,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
         <figure class="slide">
           <div class="shot video" data-file="logomarcas.jpg">
             <img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')">
-            <!-- <video src="seu-video.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video> -->
           </div>
           <figcaption><b>Logomarcas</b><span>Identidade visual</span></figcaption>
         </figure>
@@ -344,9 +343,11 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <figcaption><b>Banners</b><span>Comunicação visual</span></figcaption>
         </figure>
         <figure class="slide">
-          <div class="shot video" data-file="logomarcas.jpg">
-    <video src="seu-video.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video>
-</div>
+          <!-- CORRIGIDO: O vídeo agora substitui a imagem de forma limpa. Se o vídeo falhar, a imagem de fallback é mostrada. -->
+          <div class="shot video" data-file="letreiros-led.jpg">
+            <video src="seu-video.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video>
+            <img src="letreiros-led.jpg" alt="Letreiros em LED" loading="lazy" style="display:none;">
+          </div>
           <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
         </figure>
         <figure class="slide">
@@ -483,8 +484,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   
   function sizeWork(){
     if(reduce) return;
-    // Adiciona uma margem extra (window.innerWidth / 2) para garantir que o último cartão
-    // saia da borda e chegue ao centro da tela, não cortando as legendas.
     const dist = Math.max(0, track.scrollWidth - innerWidth + (innerWidth * 0.2));
     work.style.height = (dist + innerHeight) + 'px';
     work._dist = dist;
