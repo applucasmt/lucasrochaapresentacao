@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucas Rocha Ramos</title>
+<meta name="description" content="Currículo interativo de Lucas Rocha Ramos: designer gráfico, social media e produtor audiovisual em Várzea Grande - MT.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000000; /* Fundo preto puro */
+  --bg2:#050505;
+  --panel:rgba(20, 20, 20, 0.4);
+  --ink:#ffffff;
+  --mute:#a0a0a0;
+  
+  /* CORES ALTERADAS: De verde para cinza/branco */
+  --g:#ffffff; /* Destaque principal agora é branco */
+  --g2:#888888; /* Destaque secundário agora é cinza */
+  --line:rgba(255,255,255,.1);
+  --glass-border:rgba(255,255,255,.08);
+  --glass-highlight:rgba(255,255,255,.03);
+  --glow:0 0 30px rgba(255,255,255,.15); /* Brilho branco sutil */
+
+  --display:'Unbounded',system-ui,sans-serif;
+  --body:'Manrope',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--g);outline-offset:4px;border-radius:4px}
+::selection{background:var(--g);color:var(--bg)}
+
+/* --- EFEITOS DE FUNDO (DESFOQUE PESADO) --- */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+/* Orbes de luz desfocados */
+.ambient-orb{position:fixed;border-radius:50%;filter:blur(150px);z-index:0;pointer-events:none;opacity:0.2}
+.orb-1{width:60vw;height:60vw;background:var(--g);top:-20%;left:-10%;animation:float1 25s ease-in-out infinite}
+.orb-2{width:50vw;height:50vw;background:var(--g2);bottom:-15%;right:-10%;animation:float2 30s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(10%,5%)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-10%,-5%)}}
+
+main,header,footer{position:relative;z-index:2}
+
+/* --- BARRA DE PROGRESSO E NAVEGAÇÃO --- */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:50;background:transparent}
+.progress i{display:block;height:100%;width:100%;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
+
+.dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:16px;padding:16px 10px;background:rgba(2,2,2,0.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:30px;border:1px solid var(--glass-border)}
+.dots a{position:relative;width:8px;height:8px;border-radius:50%;border:1px solid var(--mute);display:block;transition:.3s}
+.dots a span{position:absolute;right:26px;top:50%;transform:translateY(-50%);font-size:.75rem;white-space:nowrap;opacity:0;pointer-events:none;color:var(--g);transition:.25s;background:rgba(2,2,2,0.9);backdrop-filter:blur(10px);padding:4px 10px;border-radius:6px;border:1px solid var(--line);letter-spacing:0.5px}
+.dots a:hover span,.dots a:focus-visible span{opacity:1}
+.dots a.on{background:var(--g);border-color:var(--g);box-shadow:var(--glow);transform:scale(1.3)}
+
+.wrap{width:min(1100px,88vw);margin:0 auto}
+section{position:relative}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:1.2rem;background:linear-gradient(180deg, #fff 0%, #a0b8ab 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lead{color:var(--mute);max-width:56ch;font-size:1.05rem;font-weight:300;letter-spacing:0.2px}
+
+/* Revelação */
+.rv{opacity:0;transform:translateY(30px);transition:opacity 1s cubic-bezier(0.2,0.8,0.2,1),transform 1s cubic-bezier(0.2,0.8,0.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* --- HERO (FOTO + NOME) --- */
+.hero{min-height:100svh;display:grid;align-items:center;padding:7rem 0 8rem;overflow:hidden} /* Aumentado o padding-bottom para 8rem */
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:3rem;align-items:center}
+.crop{position:absolute;width:34px;height:34px;border-color:var(--g);border-style:solid;border-width:0;opacity:.5;z-index:5}
+.crop.tl{top:28px;left:28px;border-top-width:1.5px;border-left-width:1.5px}
+.crop.tr{top:28px;right:28px;border-top-width:1.5px;border-right-width:1.5px}
+.crop.bl{bottom:28px;left:28px;border-bottom-width:1.5px;border-left-width:1.5px}
+.crop.br{bottom:28px;right:28px;border-bottom-width:1.5px;border-right-width:1.5px}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.8rem,7.8vw,6.5rem);line-height:.95;letter-spacing:-.04em}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln span{display:inline-block;transform:translateY(110%);animation:up 1.2s cubic-bezier(.2,.8,.2,1) forwards;background:linear-gradient(180deg, #fff 30%, #7d9689 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .ln:nth-child(2) span{animation-delay:.15s}
+.hero h1 .ln:nth-child(3) span{animation-delay:.3s}
+@keyframes up{to{transform:none}}
+.role{margin-top:1.8rem;font-size:clamp(1.05rem,2vw,1.35rem);color:var(--ink);min-height:2em;font-weight:300;letter-spacing:0.5px}
+.role b{font-weight:500;color:var(--g);text-shadow:0 0 20px rgba(255,255,255,.4)}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--g);margin-left:3px;vertical-align:-.15em;animation:blink 1s steps(1) infinite;box-shadow:var(--glow)}
+@keyframes blink{50%{opacity:0}}
+.meta{margin-top:1.4rem;color:var(--mute);font-size:.95rem;letter-spacing:1px;text-transform:uppercase}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;margin-top:2.5rem}
+
+/* BOTÕES LIQUID GLASS */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:1rem 1.8rem;border-radius:999px;font-weight:600;text-decoration:none;font-size:.95rem;transition:.4s cubic-bezier(0.2,0.8,0.2,1);border:1px solid var(--glass-border);cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg, var(--glass-highlight), transparent);pointer-events:none}
+.btn.solid{background:rgba(255,255,255,0.1);color:var(--g);box-shadow:0 0 0 1px rgba(255,255,255,0.2), inset 0 0 20px rgba(255,255,255,0.1)}
+.btn.solid:hover{background:var(--g);color:var(--bg);box-shadow:0 0 40px rgba(255,255,255,.6);transform:translateY(-2px)}
+.btn.ghost{color:var(--ink);background:rgba(255,255,255,0.02)}
+.btn.ghost:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.2)}
+
+/* RETRATO LIQUID GLASS */
+.portrait{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;border:1px solid var(--glass-border);background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05)}
+.portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2) contrast(1.1) saturate(.9);opacity:0.9}
+.portrait::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(2,2,2,.85));z-index:1}
+.portrait::after{content:"";position:absolute;left:0;right:0;height:2px;background:var(--g);box-shadow:0 0 30px 4px rgba(255,255,255,.6);z-index:2;animation:scan 5s ease-in-out infinite;opacity:0.7}
+@keyframes scan{0%{top:0}50%{top:100%}100%{top:0}}
+.portrait.missing img{display:none}
+.portrait .ph{display:none}
+.portrait.missing .ph{display:grid;place-items:center;position:absolute;inset:0;font-family:var(--display);font-size:4rem;color:var(--g);text-align:center}
+.portrait.missing .ph small{display:block;font-family:var(--body);font-size:.8rem;color:var(--mute);margin-top:.5rem}
+
+.hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--mute);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;pointer-events:none} /* Ajustado bottom e adicionado pointer-events:none */
+.hint i{width:1px;height:50px;background:linear-gradient(var(--g),transparent);animation:drop 2s ease-in-out infinite;transform-origin:top}
+@keyframes drop{0%{transform:scaleY(0)}60%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* --- SOBRE --- */
+.story{height:240vh}
+.story .sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center}
+.story p{font-family:var(--display);font-weight:400;font-size:clamp(1.3rem,3.2vw,2.4rem);line-height:1.45;letter-spacing:-.015em;max-width:26em}
+.story p span{color:rgba(230,244,236,.08);transition:color .4s,text-shadow .4s, filter .4s}
+.story p span.lit{color:var(--ink);filter:blur(0)}
+.story p span.hot{color:var(--g);text-shadow:0 0 24px rgba(255,255,255,.5);filter:blur(0)}
+
+/* --- NÚMEROS (GLASS) --- */
+.nums{padding:8rem 0}
+.nums .grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);background:rgba(10,10,10,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:20px;overflow:hidden}
+.nums .cell{padding:2.4rem 1.4rem;border-right:1px solid var(--glass-border);transition:background 0.3s}
+.nums .cell:hover{background:rgba(255,255,255,0.03)}
+.nums .cell:last-child{border-right:0}
+.nums strong{display:block;font-family:var(--display);font-weight:800;font-size:clamp(2.5rem,5.5vw,4.5rem);background:linear-gradient(180deg, var(--g), var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;text-shadow:0 0 30px rgba(255,255,255,.2)}
+.nums span{display:block;margin-top:.8rem;color:var(--mute);font-size:.85rem;text-transform:uppercase;letter-spacing:1px}
+
+/* --- EXPERIÊNCIA (TIMELINE CRONOLÓGICA) --- */
+.exp{padding:8rem 0}
+.tl{position:relative;margin-top:4rem;padding-left:2.4rem}
+.tl::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--glass-border)}
+.tl .fill{position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--g);box-shadow:var(--glow);transform-origin:top;transform:scaleY(0)}
+.job{position:relative;padding:0 0 3.5rem;opacity:.2;transition:opacity .8s, transform .8s;transform:translateX(10px)}
+.job.in{opacity:1;transform:translateX(0)}
+.job::before{content:"";position:absolute;left:calc(-2.4rem + 1.5px);top:.6rem;width:10px;height:10px;border-radius:50%;background:var(--bg);border:1.5px solid var(--mute);transition:.5s;z-index:2}
+.job.in::before{background:var(--g);border-color:var(--g);box-shadow:0 0 20px rgba(255,255,255,.6)}
+.job time{color:var(--g);font-weight:500;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.job h3{font-family:var(--display);font-weight:600;font-size:clamp(1.1rem,2.2vw,1.5rem);margin:0 0 .2rem;letter-spacing:-.01em;color:#fff}
+.job .cargo{color:var(--mute);font-size:.95rem;margin-bottom:1rem;font-weight:300}
+.job ul{list-style:none;display:grid;gap:.6rem;max-width:62ch;background:rgba(255,255,255,0.015);padding:1.2rem 1.5rem;border-radius:12px;border:1px solid var(--glass-border);backdrop-filter:blur(5px)}
+.job li{padding-left:1.3rem;position:relative;font-size:.95rem;color:#d0d0d0}
+.job li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:var(--g);box-shadow:var(--glow)}
+
+/* --- TRABALHOS (CORREÇÃO DO CORTE) --- */
+.work{height:500vh}
+.work .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:2rem}
+.work .head{width:min(1100px,88vw);margin:0 auto}
+.work .head h2{margin-bottom:.4rem}
+.track{display:flex;gap:32px;padding:0 6vw;will-change:transform}
+.slide{flex:0 0 min(60vw,600px)}
+.shot{position:relative;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid var(--glass-border);background:var(--panel);transition:.5s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.slide:hover .shot{border-color:rgba(255,255,255,0.4);box-shadow:0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,255,255,.15);transform:translateY(-5px)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85}
+.slide:hover .shot img{transform:scale(1.05);opacity:1}
+.shot.missing img{display:none}
+.shot.missing::before{content:attr(data-file);position:absolute;inset:14px;display:grid;place-items:center;text-align:center;border:1.5px dashed var(--line);border-radius:12px;color:var(--g);font-size:.95rem;padding:1rem;background:rgba(10,10,10,0.6);backdrop-filter:blur(10px)}
+.slide figcaption{margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+.slide figcaption b{font-family:var(--display);font-weight:600;font-size:1rem;color:#fff}
+.slide figcaption span{color:var(--mute);font-size:.85rem;text-align:right;letter-spacing:0.5px}
+.wbar{width:min(1100px,88vw);margin:0 auto;height:2px;background:var(--glass-border);position:relative;border-radius:2px;overflow:hidden}
+.wbar i{position:absolute;inset:0;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
+
+/* --- FERRAMENTAS --- */
+.tools{padding:8rem 0}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3.5rem}
+.groups h3{font-family:var(--display);font-weight:600;font-size:1rem;margin-bottom:1.2rem;color:#fff;display:flex;align-items:center;gap:8px}
+.groups h3::before{content:'';display:block;width:6px;height:6px;background:var(--g);border-radius:50%;box-shadow:var(--glow)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:.6rem 1.2rem;border:1px solid var(--glass-border);border-radius:12px;font-size:.9rem;background:rgba(255,255,255,0.015);backdrop-filter:blur(10px);transition:.3s;color:#d0d0d0}
+.chip:hover{border-color:rgba(255,255,255,0.4);color:var(--g);background:rgba(255,255,255,0.05);box-shadow:0 0 20px rgba(255,255,255,.1);transform:translateY(-2px)}
+
+/* --- FORMAÇÃO --- */
+.edu{padding:3rem 0 8rem}
+.edu .rows{margin-top:3rem;border-top:1px solid var(--glass-border)}
+.edu .row{display:flex;justify-content:space-between;gap:1.5rem;align-items:baseline;padding:1.8rem 0;border-bottom:1px solid var(--glass-border);transition:.3s}
+.edu .row:hover{padding-left:16px;border-color:rgba(255,255,255,0.3);background:linear-gradient(90deg, rgba(255,255,255,0.03), transparent)}
+.edu .row b{font-family:var(--display);font-weight:600;font-size:clamp(1rem,2vw,1.3rem);color:#fff}
+.edu .row span{color:var(--g);white-space:nowrap;font-size:0.9rem;letter-spacing:0.5px;background:rgba(255,255,255,0.08);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.15)}
+
+/* --- CTA FINAL --- */
+.cta{min-height:100svh;display:grid;place-items:center;text-align:center;padding:6rem 0;overflow:hidden}
+.cta::before{content:"";position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.1),transparent 60%);animation:pulse 6s ease-in-out infinite;filter:blur(50px)}
+@keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.2);opacity:.8}}
+.cta .wrap{position:relative;z-index:2}
+.cta h2{font-size:clamp(2rem,6vw,4.5rem);margin-bottom:1.2rem;background:linear-gradient(180deg, #fff 0%, #a0b8ab 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta .lead{margin:0 auto 2.8rem;color:var(--mute);font-weight:300}
+.big{font-size:1.1rem;padding:1.3rem 2.8rem;animation:glowbtn 3s ease-in-out infinite}
+@keyframes glowbtn{50%{box-shadow:0 0 60px rgba(255,255,255,.6), inset 0 0 20px rgba(255,255,255,0.2)}}
+.contacts{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:3rem;color:var(--mute);font-size:.95rem}
+.contacts a{text-decoration:none;border-bottom:1px solid var(--glass-border);transition:.3s;padding-bottom:2px}
+.contacts a:hover{color:var(--g);border-color:var(--g);text-shadow:0 0 15px rgba(255,255,255,0.4)}
+footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;letter-spacing:1px;border-top:1px solid var(--glass-border);background:rgba(2,2,2,0.8);backdrop-filter:blur(10px);position:relative;z-index:10}
+
+/* --- RESPONSIVO --- */
+@media(max-width:860px){
+  .hero .wrap{grid-template-columns:1fr}
+  .portrait{max-width:320px;order:-1;margin:0 auto}
+  .nums .grid{grid-template-columns:repeat(2,1fr)}
+  .nums .cell:nth-child(2){border-right:0}
+  .nums .cell:nth-child(-n+2){border-bottom:1px solid var(--glass-border)}
+  .groups{grid-template-columns:1fr}
+  .slide{flex-basis:82vw}
+  .dots{display:none}
+  .crop{width:22px;height:22px}
+  .crop.tl,.crop.tr{top:16px}.crop.bl,.crop.br{bottom:16px}
+  .crop.tl,.crop.bl{left:16px}.crop.tr,.crop.br{right:16px}
+  .job ul{padding:1rem}
+  /* Ajuste para não cortar os textos no mobile */
+  .edu .row{flex-direction:column;gap:0.5rem;align-items:flex-start;}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.job{opacity:1;transform:none}
+  .hero h1 .ln span{transform:none}
+  .story p span{color:var(--ink)}
+  .work{height:auto}.work .pin{position:static;height:auto;padding:4rem 0}
+  .track{overflow-x:auto;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Orbes de luz desfocados no fundo -->
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+
+<nav class="dots" aria-label="Seções da página">
+  <a href="#inicio" title="Início"><span>Início</span></a>
+  <a href="#sobre" title="Sobre"><span>Sobre</span></a>
+  <a href="#numeros" title="Números"><span>Números</span></a>
+  <a href="#experiencia" title="Experiência"><span>Experiência</span></a>
+  <a href="#trabalhos" title="Trabalhos"><span>Trabalhos</span></a>
+  <a href="#ferramentas" title="Ferramentas"><span>Ferramentas</span></a>
+  <a href="#formacao" title="Formação"><span>Formação</span></a>
+  <a href="#portfolio" title="Portfólio"><span>Portfólio</span></a>
+</nav>
+
+<header>
+  <section class="hero" id="inicio" data-nav>
+    <i class="crop tl"></i><i class="crop tr"></i><i class="crop bl"></i><i class="crop br"></i>
+    <div class="wrap">
+      <div>
+        <h1 aria-label="Lucas Rocha Ramos">
+          <span class="ln"><span>Lucas</span></span>
+          <span class="ln"><span>Rocha</span></span>
+          <span class="ln"><span>Ramos</span></span>
+        </h1>
+        <p class="role"><span id="typed"></span><span class="caret" aria-hidden="true"></span></p>
+        <p class="meta">Várzea Grande - MT, 26 anos</p>
+        <div class="hero-cta">
+          <a class="btn solid" href="#trabalhos">Ver trabalhos</a>
+          <a class="btn ghost" href="#portfolio">Falar comigo</a>
+        </div>
+      </div>
+      <!-- FOTO: Substitua o src abaixo pelo caminho da sua foto real (ex: "minha-foto.jpg") -->
+      <div class="portrait" id="portrait">
+        <img src="foto-perfil.jpg" alt="Foto de Lucas Rocha Ramos" onerror="this.parentElement.classList.add('missing')">
+        <div class="ph">LR<small>foto-perfil.jpg</small></div>
+      </div>
+    </div>
+    <div class="hint" aria-hidden="true">Role a página<i></i></div>
+  </section>
+</header>
+
+<main>
+  <!-- SOBRE -->
+  <section class="story" id="sobre" data-nav>
+    <div class="sticky">
+      <div class="wrap">
+        <p id="storyText">Mais de 10 anos criando design, marketing e comunicação. Lidero equipes, edito vídeos, produzo conteúdo e cuido de redes sociais com estratégia de marketing digital. Busco novas oportunidades para aplicar minha experiência e ajudar empresas a crescer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚMEROS -->
+  <section class="nums" id="numeros" data-nav>
+    <div class="wrap">
+      <div class="grid">
+        <div class="cell rv"><strong data-count="10" data-suffix="+">0</strong><span>anos de experiência</span></div>
+        <div class="cell rv"><strong data-count="5">0</strong><span>lugares onde atuei</span></div>
+        <div class="cell rv"><strong data-count="7">0</strong><span>programas que domino</span></div>
+        <div class="cell rv"><strong data-count="3">0</strong><span>formações concluídas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIÊNCIA (ORDEM CRONOLÓGICA CORRIGIDA) -->
+  <section class="exp" id="experiencia" data-nav>
+    <div class="wrap">
+      <h2 class="rv">Trajetória Profissional</h2>
+      <p class="lead rv">Da logística ao design, do 3D ao vídeo. Cada etapa trouxe uma habilidade que hoje faz parte do meu trabalho.</p>
+
+      <div class="tl" id="tl">
+        <div class="fill" id="tlFill"></div>
+
+        <!-- 1. Mais antigo -->
+        <article class="job">
+          <time>2014 a 2016</time>
+          <h3>Fórmula Distribuidora de Alimentos</h3>
+          <p class="cargo">Logística</p>
+          <ul><li>Reposição e separação de mercadorias, controle de estoque e conferência de carga</li></ul>
+        </article>
+
+        <!-- 2 -->
+        <article class="job">
+          <time>Desde 2019</time>
+          <h3>UMADECRE</h3>
+          <p class="cargo">Produtor audiovisual e roteirista</p>
+          <ul><li>Produção de conteúdos e roteiros para eventos e campanhas publicitárias</li><li>Captação de vídeos imersivos e em tempo real de eventos</li></ul>
+        </article>
+
+        <!-- 3 -->
+        <article class="job">
+          <time>2019 a 2023</time>
+          <h3>Nobre Impressão Digital LTDA</h3>
+          <p class="cargo">Designer, social media e produção audiovisual</p>
+          <ul>
+            <li>Criação de materiais gráficos: logomarcas, banners e letreiros em LED</li>
+            <li>Produção de vídeos comerciais e projetos em 3D</li>
+            <li>Atendimento ao cliente e vendas</li>
+            <li>Liderança na produção de conteúdo gráfico e audiovisual</li>
+          </ul>
+        </article>
+
+        <!-- 4 -->
+        <article class="job">
+          <time>2023</time>
+          <h3>TV Cidade Verde</h3>
+          <p class="cargo">Produtor e repórter cinematográfico</p>
+          <ul><li>Gravação para programas como POP e JMT</li><li>Produção e apoio técnico no programa Boa Noite Elias Neto</li></ul>
+        </article>
+
+        <!-- 5. Mais recente -->
+        <article class="job">
+          <time>2025</time>
+          <h3>Assessoria de Imprensa (Gabinete) ALMT</h3>
+          <p class="cargo">Produtor audiovisual e videomaker</p>
+          <ul><li>Captação e edição de vídeos</li><li>Roteirização e produção de conteúdos</li></ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TRABALHOS -->
+  <section class="work" id="trabalhos" data-nav>
+    <div class="pin">
+      <div class="head">
+        <h2 class="rv">Trabalhos selecionados</h2>
+        <p class="lead rv">Role a página para ver o que já criei.</p>
+      </div>
+
+      <div class="track" id="track">
+        <figure class="slide">
+          <div class="shot" data-file="logomarcas.jpg"><img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Logomarcas</b><span>Identidade visual</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="banners.jpg"><img src="banners.jpg" alt="Banners" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Banners</b><span>Comunicação visual</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="letreiros-led.jpg"><img src="letreiros-led.jpg" alt="Letreiros em LED" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="redes-sociais.jpg"><img src="redes-sociais.jpg" alt="Redes sociais" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Redes sociais</b><span>Planejamento e criação</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="projetos-3d.jpg"><img src="projetos-3d.jpg" alt="Projetos em 3D" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Projetos em 3D</b><span>Modelagem no SketchUp</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="videos-comerciais.jpg"><img src="videos-comerciais.jpg" alt="Vídeos comerciais" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Vídeos comerciais</b><span>Captação e edição</span></figcaption>
+        </figure>
+        <figure class="slide">
+          <div class="shot" data-file="fotografia.jpg"><img src="fotografia.jpg" alt="Fotografia" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <figcaption><b>Fotografia</b><span>Foto e drone</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="wbar" aria-hidden="true"><i id="wbar"></i></div>
+    </div>
+  </section>
+
+  <!-- FERRAMENTAS -->
+  <section class="tools" id="ferramentas" data-nav>
+    <div class="wrap">
+      <h2 class="rv">Ferramentas que uso</h2>
+      <div class="groups">
+        <div class="rv">
+          <h3>Design gráfico</h3>
+          <div class="chips"><span class="chip">Photoshop</span><span class="chip">Corel Draw</span><span class="chip">Lightroom</span><span class="chip">Manipulação de imagens</span></div>
+        </div>
+        <div class="rv">
+          <h3>Vídeo e 3D</h3>
+          <div class="chips"><span class="chip">Premiere</span><span class="chip">After Effects</span><span class="chip">Sony Vegas</span><span class="chip">SketchUp</span></div>
+        </div>
+        <div class="rv">
+          <h3>Outras habilidades</h3>
+          <div class="chips"><span class="chip">Redes sociais</span><span class="chip">Fotografia</span><span class="chip">Pilotagem de drone</span><span class="chip">Programação e prompts de IA</span><span class="chip">Manutenção de computadores</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMAÇÃO -->
+  <section class="edu" id="formacao" data-nav>
+    <div class="wrap">
+      <h2 class="rv">Formação</h2>
+      <div class="rows">
+        <div class="row rv"><b>Gestão Pública</b><span>Conclusão 2024</span></div>
+        <div class="row rv"><b>Técnico em Informática Aplicado a Marketing Empresarial</b><span>Conclusão 2017</span></div>
+        <div class="row rv"><b>Administração</b><span>Conclusão 2016</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta" id="portfolio" data-nav>
+    <div class="wrap">
+      <h2 class="rv">Quer ver mais do meu trabalho?</h2>
+      <p class="lead rv">Meu portfólio completo está online, com projetos de design, vídeo e 3D.</p>
+      <a class="btn solid big rv" href="https://portifoliolucasrocha-delta.vercel.app/" target="_blank" rel="noopener">Acessar Portfólio</a>
+      <div class="contacts rv">
+        <a href="https://wa.me/5565992977124" target="_blank" rel="noopener">WhatsApp (65) 99297-7124</a>
+        <a href="mailto:designer.br.vg@gmail.com">designer.br.vg@gmail.com</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Lucas Rocha Ramos - Várzea Grande, MT</footer>
+
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s,c=document)=>c.querySelector(s);
+  const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
+  const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+
+  /* foto de perfil */
+  const portrait = $('#portrait');
+  const pImg = $('img',portrait);
+  if(pImg.complete && pImg.naturalWidth===0) portrait.classList.add('missing');
+
+  /* texto digitado */
+  const roles = ['Designer gráfico','Social media','Produtor audiovisual','Videomaker'];
+  const typed = $('#typed');
+  if(reduce){ typed.textContent = roles[0]; }
+  else{
+    let r=0,c=0,del=false;
+    (function tick(){
+      const w = roles[r];
+      typed.textContent = w.slice(0,c);
+      if(!del && c<w.length){ c++; setTimeout(tick,70); }
+      else if(!del){ del=true; setTimeout(tick,1500); }
+      else if(c>0){ c--; setTimeout(tick,35); }
+      else { del=false; r=(r+1)%roles.length; setTimeout(tick,300); }
+    })();
+  }
+
+  /* revelação */
+  const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.18});
+  $$('.rv').forEach(el=>io.observe(el));
+
+  /* contadores */
+  const cio = new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el=e.target, to=+el.dataset.count, suf=el.dataset.suffix||'';
+    cio.unobserve(el);
+    if(reduce){ el.textContent=to+suf; return; }
+    const t0=performance.now(), dur=1400;
+    (function step(t){
+      const p=clamp((t-t0)/dur);
+      el.textContent=Math.round(to*(1-Math.pow(1-p,3)))+(p===1?suf:'');
+      if(p<1) requestAnimationFrame(step);
+    })(t0);
+  }),{threshold:.6});
+  $$('[data-count]').forEach(el=>cio.observe(el));
+
+  /* sobre */
+  const sp = $('#storyText');
+  const hotWords = ['design,','marketing','comunicação.','vídeos,','crescer.'];
+  const words = sp.textContent.trim().split(/\s+/);
+  sp.innerHTML = words.map(w=>`<span${hotWords.includes(w)?' data-hot':''}>${w}</span>`).join(' ');
+  const wSpans = $$('span',sp);
+  const story = $('#sobre');
+
+  /* linha do tempo */
+  const jobs = $$('.job');
+  const jio = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{rootMargin:'0px 0px -35% 0px'});
+  jobs.forEach(j=>jio.observe(j));
+  const tl = $('#tl'), tlFill = $('#tlFill');
+
+  /* galeria */
+  const work = $('#trabalhos'), track = $('#track'), wbar = $('#wbar');
+  function sizeWork(){
+    if(reduce) return;
+    const dist = Math.max(0, track.scrollWidth - innerWidth);
+    work.style.height = (dist + innerHeight * 1.2) + 'px';
+    work._dist = dist;
+  }
+  sizeWork(); addEventListener('resize',sizeWork); addEventListener('load',sizeWork);
+
+  /* navegação */
+  const navs = $$('[data-nav]');
+  const dots = $$('.dots a');
+  const bar = $('#bar');
+
+  function onScroll(){
+    const y = scrollY, vh = innerHeight;
+    bar.style.transform = `scaleX(${clamp(y/(document.documentElement.scrollHeight-vh))})`;
+
+    const sr = story.getBoundingClientRect();
+    const sp1 = clamp(-sr.top/(sr.height-vh));
+    const n = Math.round(sp1*1.15*wSpans.length);
+    wSpans.forEach((s,i)=>{ const on=i<n; s.classList.toggle('lit',on); s.classList.toggle('hot',on && s.hasAttribute('data-hot')); });
+
+    const tr = tl.getBoundingClientRect();
+    tlFill.style.transform = `scaleY(${clamp((vh*0.6 - tr.top)/tr.height)})`;
+
+    if(!reduce){
+      const wr = work.getBoundingClientRect();
+      const p = clamp(-wr.top/(wr.height-vh));
+      track.style.transform = `translate3d(${-p*(work._dist||0)}px,0,0)`;
+      wbar.style.transform = `scaleX(${p})`;
+    }
+
+    let cur = 0;
+    navs.forEach((s,i)=>{ if(s.getBoundingClientRect().top < vh*0.5) cur=i; });
+    dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
+  }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',onScroll);
+  onScroll();
+
+  /* canvas partículas */
+  const cv = $('#fx'), ctx = cv.getContext('2d');
+  let W,H,pts=[];
+  function setup(){
+    const dpr = Math.min(devicePixelRatio||1,2);
+    W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr;
+    cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+    const count = Math.round(clamp(innerWidth*innerHeight/24000,24,80));
+    pts = Array.from({length:count},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3*dpr,vy:(Math.random()-.5)*.3*dpr,r:(Math.random()*1.2+.6)*dpr}));
+    cv._dpr=dpr;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const d=cv._dpr, link=160*d;
+    for(const p of pts){
+      if(!reduce){ p.x+=p.vx; p.y+=p.vy; }
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283);
+      ctx.fillStyle = 'rgba(255,255,255,.25)'; /* Pontos brancos */
+      ctx.fill();
+    }
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const a=pts[i],b=pts[j],dist=Math.hypot(a.x-b.x,a.y-b.y);
+        if(dist<link){
+          ctx.strokeStyle=`rgba(255,255,255,${(1-dist/link)*.15})`; /* Linhas brancas */
+          ctx.lineWidth=d;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  setup(); draw();
+  addEventListener('resize',()=>{ setup(); if(reduce) draw(); });
+})();
+</script>
+</body>
+</html>
