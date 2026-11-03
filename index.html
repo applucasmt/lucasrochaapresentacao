@@ -11,20 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#000000; /* Fundo preto puro */
+  --bg:#000000;
   --bg2:#050505;
   --panel:rgba(20, 20, 20, 0.4);
   --ink:#ffffff;
   --mute:#a0a0a0;
-  
-  /* CORES ALTERADAS: De verde para cinza/branco */
-  --g:#ffffff; /* Destaque principal agora é branco */
-  --g2:#888888; /* Destaque secundário agora é cinza */
+  --g:#ffffff;
+  --g2:#888888;
   --line:rgba(255,255,255,.1);
   --glass-border:rgba(255,255,255,.08);
   --glass-highlight:rgba(255,255,255,.03);
-  --glow:0 0 30px rgba(255,255,255,.15); /* Brilho branco sutil */
-
+  --glow:0 0 30px rgba(255,255,255,.15);
   --display:'Unbounded',system-ui,sans-serif;
   --body:'Manrope',system-ui,sans-serif;
 }
@@ -36,11 +33,9 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--g);outline-offset:4px;border-radius:4px}
 ::selection{background:var(--g);color:var(--bg)}
 
-/* --- EFEITOS DE FUNDO (DESFOQUE PESADO) --- */
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
 .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 
-/* Orbes de luz desfocados */
 .ambient-orb{position:fixed;border-radius:50%;filter:blur(150px);z-index:0;pointer-events:none;opacity:0.2}
 .orb-1{width:60vw;height:60vw;background:var(--g);top:-20%;left:-10%;animation:float1 25s ease-in-out infinite}
 .orb-2{width:50vw;height:50vw;background:var(--g2);bottom:-15%;right:-10%;animation:float2 30s ease-in-out infinite}
@@ -49,7 +44,6 @@ a{color:inherit}
 
 main,header,footer{position:relative;z-index:2}
 
-/* --- BARRA DE PROGRESSO E NAVEGAÇÃO --- */
 .progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:50;background:transparent}
 .progress i{display:block;height:100%;width:100%;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
 
@@ -64,12 +58,11 @@ section{position:relative}
 h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:1.2rem;background:linear-gradient(180deg, #fff 0%, #a0b8ab 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .lead{color:var(--mute);max-width:56ch;font-size:1.05rem;font-weight:300;letter-spacing:0.2px}
 
-/* Revelação */
 .rv{opacity:0;transform:translateY(30px);transition:opacity 1s cubic-bezier(0.2,0.8,0.2,1),transform 1s cubic-bezier(0.2,0.8,0.2,1)}
 .rv.in{opacity:1;transform:none}
 
-/* --- HERO (FOTO + NOME) --- */
-.hero{min-height:100svh;display:grid;align-items:center;padding:7rem 0 8rem;overflow:hidden} /* Aumentado o padding-bottom para 8rem */
+/* --- HERO --- */
+.hero{min-height:100svh;display:grid;align-items:center;padding:7rem 0 8rem;overflow:hidden}
 .hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:3rem;align-items:center}
 .crop{position:absolute;width:34px;height:34px;border-color:var(--g);border-style:solid;border-width:0;opacity:.5;z-index:5}
 .crop.tl{top:28px;left:28px;border-top-width:1.5px;border-left-width:1.5px}
@@ -89,7 +82,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .meta{margin-top:1.4rem;color:var(--mute);font-size:.95rem;letter-spacing:1px;text-transform:uppercase}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap;margin-top:2.5rem}
 
-/* BOTÕES LIQUID GLASS */
 .btn{display:inline-flex;align-items:center;gap:10px;padding:1rem 1.8rem;border-radius:999px;font-weight:600;text-decoration:none;font-size:.95rem;transition:.4s cubic-bezier(0.2,0.8,0.2,1);border:1px solid var(--glass-border);cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:relative;overflow:hidden}
 .btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg, var(--glass-highlight), transparent);pointer-events:none}
 .btn.solid{background:rgba(255,255,255,0.1);color:var(--g);box-shadow:0 0 0 1px rgba(255,255,255,0.2), inset 0 0 20px rgba(255,255,255,0.1)}
@@ -97,7 +89,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .btn.ghost{color:var(--ink);background:rgba(255,255,255,0.02)}
 .btn.ghost:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.2)}
 
-/* RETRATO LIQUID GLASS */
 .portrait{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;border:1px solid var(--glass-border);background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05)}
 .portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2) contrast(1.1) saturate(.9);opacity:0.9}
 .portrait::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(2,2,2,.85));z-index:1}
@@ -108,11 +99,10 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .portrait.missing .ph{display:grid;place-items:center;position:absolute;inset:0;font-family:var(--display);font-size:4rem;color:var(--g);text-align:center}
 .portrait.missing .ph small{display:block;font-family:var(--body);font-size:.8rem;color:var(--mute);margin-top:.5rem}
 
-.hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--mute);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;pointer-events:none} /* Ajustado bottom e adicionado pointer-events:none */
+.hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--mute);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;pointer-events:none}
 .hint i{width:1px;height:50px;background:linear-gradient(var(--g),transparent);animation:drop 2s ease-in-out infinite;transform-origin:top}
 @keyframes drop{0%{transform:scaleY(0)}60%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
 
-/* --- SOBRE --- */
 .story{height:240vh}
 .story .sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center}
 .story p{font-family:var(--display);font-weight:400;font-size:clamp(1.3rem,3.2vw,2.4rem);line-height:1.45;letter-spacing:-.015em;max-width:26em}
@@ -120,7 +110,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .story p span.lit{color:var(--ink);filter:blur(0)}
 .story p span.hot{color:var(--g);text-shadow:0 0 24px rgba(255,255,255,.5);filter:blur(0)}
 
-/* --- NÚMEROS (GLASS) --- */
 .nums{padding:8rem 0}
 .nums .grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);background:rgba(10,10,10,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:20px;overflow:hidden}
 .nums .cell{padding:2.4rem 1.4rem;border-right:1px solid var(--glass-border);transition:background 0.3s}
@@ -129,7 +118,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .nums strong{display:block;font-family:var(--display);font-weight:800;font-size:clamp(2.5rem,5.5vw,4.5rem);background:linear-gradient(180deg, var(--g), var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;text-shadow:0 0 30px rgba(255,255,255,.2)}
 .nums span{display:block;margin-top:.8rem;color:var(--mute);font-size:.85rem;text-transform:uppercase;letter-spacing:1px}
 
-/* --- EXPERIÊNCIA (TIMELINE CRONOLÓGICA) --- */
 .exp{padding:8rem 0}
 .tl{position:relative;margin-top:4rem;padding-left:2.4rem}
 .tl::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--glass-border)}
@@ -145,8 +133,9 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .job li{padding-left:1.3rem;position:relative;font-size:.95rem;color:#d0d0d0}
 .job li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:var(--g);box-shadow:var(--glow)}
 
-/* --- TRABALHOS (CORREÇÃO DO CORTE) --- */
-.work{height:500vh}
+/* --- TRABALHOS --- */
+.work{height:auto; /* Removido o height fixo de 500vh */
+}
 .work .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:2rem}
 .work .head{width:min(1100px,88vw);margin:0 auto}
 .work .head h2{margin-bottom:.4rem}
@@ -154,8 +143,8 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .slide{flex:0 0 min(60vw,600px)}
 .shot{position:relative;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid var(--glass-border);background:var(--panel);transition:.5s cubic-bezier(0.2,0.8,0.2,1);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
 .slide:hover .shot{border-color:rgba(255,255,255,0.4);box-shadow:0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,255,255,.15);transform:translateY(-5px)}
-.shot img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85}
-.slide:hover .shot img{transform:scale(1.05);opacity:1}
+.shot img, .shot video{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85}
+.slide:hover .shot img, .slide:hover .shot video{transform:scale(1.05);opacity:1}
 .shot.missing img{display:none}
 .shot.missing::before{content:attr(data-file);position:absolute;inset:14px;display:grid;place-items:center;text-align:center;border:1.5px dashed var(--line);border-radius:12px;color:var(--g);font-size:.95rem;padding:1rem;background:rgba(10,10,10,0.6);backdrop-filter:blur(10px)}
 .slide figcaption{margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
@@ -164,7 +153,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .wbar{width:min(1100px,88vw);margin:0 auto;height:2px;background:var(--glass-border);position:relative;border-radius:2px;overflow:hidden}
 .wbar i{position:absolute;inset:0;background:var(--g);box-shadow:var(--glow);transform-origin:left;transform:scaleX(0)}
 
-/* --- FERRAMENTAS --- */
 .tools{padding:8rem 0}
 .groups{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4rem;margin-top:3.5rem}
 .groups h3{font-family:var(--display);font-weight:600;font-size:1rem;margin-bottom:1.2rem;color:#fff;display:flex;align-items:center;gap:8px}
@@ -173,7 +161,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .chip{padding:.6rem 1.2rem;border:1px solid var(--glass-border);border-radius:12px;font-size:.9rem;background:rgba(255,255,255,0.015);backdrop-filter:blur(10px);transition:.3s;color:#d0d0d0}
 .chip:hover{border-color:rgba(255,255,255,0.4);color:var(--g);background:rgba(255,255,255,0.05);box-shadow:0 0 20px rgba(255,255,255,.1);transform:translateY(-2px)}
 
-/* --- FORMAÇÃO --- */
 .edu{padding:3rem 0 8rem}
 .edu .rows{margin-top:3rem;border-top:1px solid var(--glass-border)}
 .edu .row{display:flex;justify-content:space-between;gap:1.5rem;align-items:baseline;padding:1.8rem 0;border-bottom:1px solid var(--glass-border);transition:.3s}
@@ -181,7 +168,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .edu .row b{font-family:var(--display);font-weight:600;font-size:clamp(1rem,2vw,1.3rem);color:#fff}
 .edu .row span{color:var(--g);white-space:nowrap;font-size:0.9rem;letter-spacing:0.5px;background:rgba(255,255,255,0.08);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.15)}
 
-/* --- CTA FINAL --- */
 .cta{min-height:100svh;display:grid;place-items:center;text-align:center;padding:6rem 0;overflow:hidden}
 .cta::before{content:"";position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.1),transparent 60%);animation:pulse 6s ease-in-out infinite;filter:blur(50px)}
 @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.2);opacity:.8}}
@@ -195,7 +181,6 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .contacts a:hover{color:var(--g);border-color:var(--g);text-shadow:0 0 15px rgba(255,255,255,0.4)}
 footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;letter-spacing:1px;border-top:1px solid var(--glass-border);background:rgba(2,2,2,0.8);backdrop-filter:blur(10px);position:relative;z-index:10}
 
-/* --- RESPONSIVO --- */
 @media(max-width:860px){
   .hero .wrap{grid-template-columns:1fr}
   .portrait{max-width:320px;order:-1;margin:0 auto}
@@ -209,7 +194,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   .crop.tl,.crop.tr{top:16px}.crop.bl,.crop.br{bottom:16px}
   .crop.tl,.crop.bl{left:16px}.crop.tr,.crop.br{right:16px}
   .job ul{padding:1rem}
-  /* Ajuste para não cortar os textos no mobile */
   .edu .row{flex-direction:column;gap:0.5rem;align-items:flex-start;}
 }
 @media(prefers-reduced-motion:reduce){
@@ -229,7 +213,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 <canvas id="fx" aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 
-<!-- Orbes de luz desfocados no fundo -->
 <div class="ambient-orb orb-1"></div>
 <div class="ambient-orb orb-2"></div>
 
@@ -261,7 +244,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <a class="btn ghost" href="#portfolio">Falar comigo</a>
         </div>
       </div>
-      <!-- FOTO: Substitua o src abaixo pelo caminho da sua foto real (ex: "minha-foto.jpg") -->
       <div class="portrait" id="portrait">
         <img src="foto-perfil.jpg" alt="Foto de Lucas Rocha Ramos" onerror="this.parentElement.classList.add('missing')">
         <div class="ph">LR<small>foto-perfil.jpg</small></div>
@@ -272,7 +254,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 </header>
 
 <main>
-  <!-- SOBRE -->
   <section class="story" id="sobre" data-nav>
     <div class="sticky">
       <div class="wrap">
@@ -281,7 +262,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- NÚMEROS -->
   <section class="nums" id="numeros" data-nav>
     <div class="wrap">
       <div class="grid">
@@ -293,7 +273,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- EXPERIÊNCIA (ORDEM CRONOLÓGICA CORRIGIDA) -->
   <section class="exp" id="experiencia" data-nav>
     <div class="wrap">
       <h2 class="rv">Trajetória Profissional</h2>
@@ -302,7 +281,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
       <div class="tl" id="tl">
         <div class="fill" id="tlFill"></div>
 
-        <!-- 1. Mais antigo -->
         <article class="job">
           <time>2014 a 2016</time>
           <h3>Fórmula Distribuidora de Alimentos</h3>
@@ -310,7 +288,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <ul><li>Reposição e separação de mercadorias, controle de estoque e conferência de carga</li></ul>
         </article>
 
-        <!-- 2 -->
         <article class="job">
           <time>Desde 2019</time>
           <h3>UMADECRE</h3>
@@ -318,7 +295,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <ul><li>Produção de conteúdos e roteiros para eventos e campanhas publicitárias</li><li>Captação de vídeos imersivos e em tempo real de eventos</li></ul>
         </article>
 
-        <!-- 3 -->
         <article class="job">
           <time>2019 a 2023</time>
           <h3>Nobre Impressão Digital LTDA</h3>
@@ -331,7 +307,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           </ul>
         </article>
 
-        <!-- 4 -->
         <article class="job">
           <time>2023</time>
           <h3>TV Cidade Verde</h3>
@@ -339,7 +314,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <ul><li>Gravação para programas como POP e JMT</li><li>Produção e apoio técnico no programa Boa Noite Elias Neto</li></ul>
         </article>
 
-        <!-- 5. Mais recente -->
         <article class="job">
           <time>2025</time>
           <h3>Assessoria de Imprensa (Gabinete) ALMT</h3>
@@ -351,7 +325,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- TRABALHOS -->
   <section class="work" id="trabalhos" data-nav>
     <div class="pin">
       <div class="head">
@@ -361,7 +334,11 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 
       <div class="track" id="track">
         <figure class="slide">
-          <div class="shot" data-file="logomarcas.jpg"><img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
+          <!-- EXEMPLO DE VÍDEO: Basta substituir a tag <img> por <video> com a classe .video -->
+          <div class="shot video" data-file="logomarcas.jpg">
+            <img src="logomarcas.jpg" alt="Logomarcas" loading="lazy" onerror="this.parentElement.classList.add('missing')">
+            <!-- <video src="seu-video.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video> -->
+          </div>
           <figcaption><b>Logomarcas</b><span>Identidade visual</span></figcaption>
         </figure>
         <figure class="slide">
@@ -394,7 +371,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- FERRAMENTAS -->
   <section class="tools" id="ferramentas" data-nav>
     <div class="wrap">
       <h2 class="rv">Ferramentas que uso</h2>
@@ -415,7 +391,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- FORMAÇÃO -->
   <section class="edu" id="formacao" data-nav>
     <div class="wrap">
       <h2 class="rv">Formação</h2>
@@ -427,7 +402,6 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
     </div>
   </section>
 
-  <!-- CTA FINAL -->
   <section class="cta" id="portfolio" data-nav>
     <div class="wrap">
       <h2 class="rv">Quer ver mais do meu trabalho?</h2>
@@ -504,15 +478,21 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
   jobs.forEach(j=>jio.observe(j));
   const tl = $('#tl'), tlFill = $('#tlFill');
 
-  /* galeria */
+  /* galeria corrigida */
   const work = $('#trabalhos'), track = $('#track'), wbar = $('#wbar');
+  
   function sizeWork(){
     if(reduce) return;
+    // Calcula a distância real de rolagem (largura total do track - largura da tela)
     const dist = Math.max(0, track.scrollWidth - innerWidth);
-    work.style.height = (dist + innerHeight * 1.2) + 'px';
+    // Define a altura da seção como a distância + 100vh para garantir a área de pin
+    work.style.height = (dist + innerHeight) + 'px';
     work._dist = dist;
   }
-  sizeWork(); addEventListener('resize',sizeWork); addEventListener('load',sizeWork);
+  
+  sizeWork(); 
+  addEventListener('resize',sizeWork); 
+  addEventListener('load',sizeWork);
 
   /* navegação */
   const navs = $$('[data-nav]');
@@ -533,8 +513,9 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
 
     if(!reduce){
       const wr = work.getBoundingClientRect();
-      const p = clamp(-wr.top/(wr.height-vh));
-      track.style.transform = `translate3d(${-p*(work._dist||0)}px,0,0)`;
+      // Calcula o progresso da rolagem dentro da seção fixa
+      const p = clamp(-wr.top / (wr.height - vh));
+      track.style.transform = `translate3d(${-p * (work._dist || 0)}px,0,0)`;
       wbar.style.transform = `scaleX(${p})`;
     }
 
@@ -565,14 +546,14 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
       if(p.x<0||p.x>W) p.vx*=-1;
       if(p.y<0||p.y>H) p.vy*=-1;
       ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283);
-      ctx.fillStyle = 'rgba(255,255,255,.25)'; /* Pontos brancos */
+      ctx.fillStyle = 'rgba(255,255,255,.25)';
       ctx.fill();
     }
     for(let i=0;i<pts.length;i++){
       for(let j=i+1;j<pts.length;j++){
         const a=pts[i],b=pts[j],dist=Math.hypot(a.x-b.x,a.y-b.y);
         if(dist<link){
-          ctx.strokeStyle=`rgba(255,255,255,${(1-dist/link)*.15})`; /* Linhas brancas */
+          ctx.strokeStyle=`rgba(255,255,255,${(1-dist/link)*.15})`;
           ctx.lineWidth=d;
           ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
         }
