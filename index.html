@@ -145,6 +145,7 @@ h2{font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2re
 .shot img, .shot video{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;opacity:0.85}
 .slide:hover .shot img, .slide:hover .shot video{transform:scale(1.05);opacity:1}
 .shot.missing img{display:none}
+.shot.missing video{display:none !important;} /* Esconde o video se der erro */
 .shot.missing::before{content:attr(data-file);position:absolute;inset:14px;display:grid;place-items:center;text-align:center;border:1.5px dashed var(--line);border-radius:12px;color:var(--g);font-size:.95rem;padding:1rem;background:rgba(10,10,10,0.6);backdrop-filter:blur(10px)}
 .slide figcaption{margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
 .slide figcaption b{font-family:var(--display);font-weight:600;font-size:1rem;color:#fff}
@@ -342,14 +343,16 @@ footer{padding:2rem 0 3rem;text-align:center;color:var(--mute);font-size:.8rem;l
           <div class="shot" data-file="banners.jpg"><img src="banners.jpg" alt="Banners" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
           <figcaption><b>Banners</b><span>Comunicação visual</span></figcaption>
         </figure>
+        
+        <!-- CARTÃO DO VÍDEO CORRIGIDO -->
         <figure class="slide">
-          <!-- CORRIGIDO: O vídeo agora substitui a imagem de forma limpa. Se o vídeo falhar, a imagem de fallback é mostrada. -->
           <div class="shot video" data-file="letreiros-led.jpg">
+            <!-- Aponta para o arquivo exato que está no seu repositório -->
             <video src="letreiros-led.mp4" autoplay loop muted playsinline onerror="this.parentElement.classList.add('missing')"></video>
-            <img src="letreiros-led.jpg" alt="Letreiros em LED" loading="lazy" style="display:none;">
           </div>
           <figcaption><b>Letreiros em LED</b><span>Fachadas e sinalização</span></figcaption>
         </figure>
+        
         <figure class="slide">
           <div class="shot" data-file="redes-sociais.jpg"><img src="redes-sociais.jpg" alt="Redes sociais" loading="lazy" onerror="this.parentElement.classList.add('missing')"></div>
           <figcaption><b>Redes sociais</b><span>Planejamento e criação</span></figcaption>
